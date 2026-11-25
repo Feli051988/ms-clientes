@@ -14,8 +14,6 @@ import com.mx.app.entity.Cliente;
 import com.mx.app.mapper.ClienteMapper;
 import com.mx.app.repository.ClienteRepository;
 
-
-
 @Service
 @Transactional
 public class ClienteServiceImp implements ClienteService {
@@ -66,9 +64,9 @@ public class ClienteServiceImp implements ClienteService {
 	public void eliminar(Long id) {
 		// TODO Auto-generated method stub
 		if (!repo.existsById(id)) {
-			new RuntimeException("El cliente con id: " + id);
+			throw new RuntimeException("El cliente con id: " + id);
 		}
-		repo.findById(id);
+		repo.deleteById(id);
 	}
 
 	@Override
