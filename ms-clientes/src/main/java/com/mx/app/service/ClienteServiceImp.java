@@ -11,6 +11,8 @@ import org.springframework.transaction.annotation.Transactional;
 import com.mx.app.dto.ClienteRequestDTO;
 import com.mx.app.dto.ClienteResponseDTO;
 import com.mx.app.entity.Cliente;
+import com.mx.app.exeption.InformacionDuplicadaExeption;
+import com.mx.app.exeption.RecursoNoEncotradoExeption;
 import com.mx.app.mapper.ClienteMapper;
 import com.mx.app.repository.ClienteRepository;
 
@@ -34,7 +36,14 @@ public class ClienteServiceImp implements ClienteService {
 
 	@Override
 	public ClienteResponseDTO guardar(ClienteRequestDTO request) {
+		// throw new RuntimeException("Error interno de prueba");
+
 		Cliente cliente = mapper.toEntity(request);
+
+		if (repo.existsByCorreo(cliente.getCorreo())) {
+			throw new InformacionDuplicadaExeption("El correo ya esta registrado " + cliente.getCorreo());
+		}
+
 		cliente.setEdad(edadActual(cliente.getFechaNacimiento()));
 		cliente.setFechaHoraRegistro(LocalDateTime.now());
 		cliente.setFechaHoraActualizacion(null);
@@ -45,7 +54,7 @@ public class ClienteServiceImp implements ClienteService {
 	@Override
 	public ClienteResponseDTO actualizar(Long id, ClienteRequestDTO request) {
 		Cliente cliente = repo.findById(id)
-				.orElseThrow(() -> new RuntimeException("Cliente no encontrado con id: " + id));
+				.orElseThrow(() -> new RecursoNoEncotradoExeption("Cliente no encontrado con id: " + id));
 
 		cliente.setNombre(request.getNombre());
 		cliente.setApp(request.getApp());
@@ -62,9 +71,9 @@ public class ClienteServiceImp implements ClienteService {
 
 	@Override
 	public void eliminar(Long id) {
-		// TODO Auto-generated method stub
+
 		if (!repo.existsById(id)) {
-			throw new RuntimeException("El cliente con id: " + id);
+			throw new RecursoNoEncotradoExeption("El cliente con id: " + id);
 		}
 		repo.deleteById(id);
 	}
@@ -74,7 +83,7 @@ public class ClienteServiceImp implements ClienteService {
 	public ClienteResponseDTO buscarID(Long id) {
 
 		Cliente cliente = repo.findById(id)
-				.orElseThrow(() -> new RuntimeException("El cliente no exite con id: " + id));
+				.orElseThrow(() -> new RecursoNoEncotradoExeption("El cliente no exite con id: " + id));
 
 		return mapper.toResponse(cliente);
 	}
@@ -85,7 +94,7 @@ public class ClienteServiceImp implements ClienteService {
 		Cliente cliente = repo.buscarNombre(nombre);
 
 		if (cliente == null) {
-			throw new RuntimeException("No exite cliente con nombre: " + nombre);
+			throw new RecursoNoEncotradoExeption("No exite cliente con nombre: " + nombre);
 		}
 		return mapper.toResponse(cliente);
 	}
@@ -93,7 +102,7 @@ public class ClienteServiceImp implements ClienteService {
 	@Override
 	@Transactional(readOnly = true)
 	public List<ClienteResponseDTO> listar() {
-		// TODO Auto-generated method stub
+
 		return repo.findAll().stream().map(mapper::toResponse).toList();
 	}
 

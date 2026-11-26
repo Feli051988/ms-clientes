@@ -29,3 +29,7 @@ spring:
 
 server:
    port: 9000  
+
+logging:
+  file:
+    name: logs/ms-clientes.log
