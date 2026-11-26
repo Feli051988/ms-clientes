@@ -3,7 +3,7 @@ package com.mx.app.controller;
 import java.util.List;
 
 import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpStatusCode;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -75,9 +75,17 @@ public class ClienteController {
 
 	// http://localhost:9000/api/cliente/
 	@DeleteMapping("/{id}")
-	@Operation(summary = "Elimina un cliente", description = "Permite actualziar un cliente en la base de datos H2 DataBase")
-	public ResponseEntity<ClienteResponseDTO> eliminar(@PathVariable() Long id) {
+	@Operation(summary = "Elimina un cliente", description = "Permite eliminar un cliente en la base de datos H2 DataBase")
+	public ResponseEntity<Void> eliminar(@PathVariable() Long id) {
 		service.eliminar(id);
+		return ResponseEntity.noContent().build();
+	}
+
+	// http://localhost:9000/api/cliente/eliminarNombre/
+	@DeleteMapping("eliminarNombre/{nombre}")
+	@Operation(summary = "Elimina un cliente por nombre", description = "Elimina un cliente únicamente cuando existe una coincidencia")
+	public ResponseEntity<Void> eliminarNombre(@PathVariable() String nombre) {
+		service.eliminarNombre(nombre);
 		return ResponseEntity.noContent().build();
 	}
 
