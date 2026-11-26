@@ -79,6 +79,23 @@ public class ClienteServiceImp implements ClienteService {
 	}
 
 	@Override
+	public void eliminarNombre(String nombre) {
+
+		List<Cliente> clientes = repo.findAllByNombreIgnoreCase(nombre);
+
+		if (clientes.isEmpty()) {
+			throw new RecursoNoEncotradoExeption("No existe ningún cliente con nombre: " + nombre);
+		}
+
+		if (clientes.size() > 1) {
+			throw new InformacionDuplicadaExeption("Existen varios clientes con el nombre: " + nombre
+					+ ". Utiliza el ID para eliminar un cliente específico.");
+		}
+
+		repo.delete(clientes.get(0));
+	}
+
+	@Override
 	@Transactional(readOnly = true)
 	public ClienteResponseDTO buscarID(Long id) {
 

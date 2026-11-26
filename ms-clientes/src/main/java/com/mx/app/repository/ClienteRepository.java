@@ -1,5 +1,7 @@
 package com.mx.app.repository;
 
+import java.util.List;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -14,4 +16,9 @@ public interface ClienteRepository extends JpaRepository<Cliente, Long> {
 	public Cliente buscarNombre(@Param("NOMBRE") String nombre);
 
 	boolean existsByCorreo(String correo);
+	
+	void deleteByNombre(String nombre);
+	
+	// en caso de tener mas de un cliente con el mismo nombre
+	List<Cliente> findAllByNombreIgnoreCase(String nombre);
 }

@@ -10,6 +10,7 @@ public interface ClienteService {
 	ClienteResponseDTO guardar(ClienteRequestDTO request);
 	ClienteResponseDTO actualizar(Long id,ClienteRequestDTO request);
 	void eliminar(Long id);
+	void eliminarNombre(String nombre);
 	
 	ClienteResponseDTO buscarID(Long id);
 	ClienteResponseDTO buscarNombre(String nombre);
